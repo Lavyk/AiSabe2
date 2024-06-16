@@ -149,6 +149,6 @@ app.use(passport.session());
 
 app.use(require("./routes"));
 
-app.listen(config.httpPort, function () {
+app.listen(process.env.PORT || config.httpPort, function () {
     console.log("Visit %s", config.origin);
 });
