@@ -1,0 +1,7 @@
+/node_modules
+/config.coffee
+/bower_components
+/app.yml
+/postgres-data
+/prod.env
+/start.sh

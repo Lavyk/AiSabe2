@@ -1,0 +1,11 @@
+psql -U cup2024 cup2024 -c "select * from User"
+
+
+psql -U cup2024 cup2024 -c "SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE';"
+
+psql -U cup2024 cup2024 -c "select * from user_account"
+
+psql -U cup2024 cup2024 -c "update user_account set admin='t' where id = 1"
+
+
+user_account

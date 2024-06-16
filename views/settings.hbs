@@ -1,0 +1,76 @@
+{{#> layout}}
+{{#*inline "head"}}
+<title>{{ t "settings.title" }} - {{@websiteName}}</title>
+{{/inline}}
+{{#*inline "body"}}
+{{> navbar}}
+<div class="container">
+
+{{#if error}}
+<div class="alert alert-danger" role="alert">
+    {{error}}
+</div>
+{{/if}}
+
+<form method="post" action="/settings">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <div class="form-group">
+        <label for="name">
+            {{ @t "settings.name" }}
+        </label>
+        <input type="text" minlength="3" maxlength="30" required name="name" class="form-control" id="name" placeholder="Μορφεύς" value="{{user.name}}">
+    </div>
+    <button type="submit" class="btn btn-primary">
+        {{ @t "settings.submit_button" }}
+    </button>
+</form>
+
+<hr/>
+
+{{#if enabledFacebook}}
+{{#if user.facebookId}}
+<div class="alert alert-success">
+<strong>You've connected your Facebook account!</strong>
+<form method="post" action="/disconnect/facebook">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <button type="submit" class="btn btn-outline-danger btn-sm mt-3">Disconnect Facebook</button>
+</form>
+</div>
+{{else}}
+<div class="alert alert-info">
+<a class="btn btn-primary" href="/connect/facebook">Connect Facebook</a>
+<strong>You want to use your Facebook account for login?</strong>
+We will NOT store any additional information except for your profile ID.
+</div>
+{{/if}}
+{{else}}
+<div class="small text-muted">
+    Facebook Login disabled.
+</div>
+{{/if}}
+
+{{#if enabledGoogle}}
+{{#if user.googleId}}
+<div class="alert alert-success">
+<strong>You've connected your Google account!</strong>
+<form method="post" action="/disconnect/google">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <button type="submit" class="btn btn-outline-danger btn-sm mt-3">Disconnect Google</button>
+</form>
+</div>
+{{else}}
+<div class="alert alert-info">
+<a class="btn btn-primary" href="/connect/google">Connect Google</a>
+<strong>You want to use your Google account for login?</strong>
+We will NOT store any additional information except for your profile ID.
+</div>
+{{/if}}
+{{else}}
+<div class="small text-muted">
+    Google Login disabled.
+</div>
+{{/if}}
+
+</div>
+{{/inline}}
+{{/layout}}

@@ -1,0 +1,49 @@
+{{#> layout}}
+{{#*inline "head"}}
+<title>{{ t "register.header" }} - {{@websiteName}}</title>
+{{/inline}}
+{{#*inline "body"}}
+{{> navbar}}
+<div class="container form-signin">
+    <h2 class="form-signin-heading">{{ t "register.header" }}</h2>
+    {{#if disabled}}
+    <div class="alert alert-danger">
+        {{ t "register.registration_disabled" }}
+    </div>
+    {{else}}
+    <form action="/register" method="POST">
+        {{#if error}}
+        <div class="alert alert-danger" role="alert">
+            <strong>{{ t "register.registration_failed" }}</strong> {{error}}
+        </div>
+        {{/if}}
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <div class="form-group">
+            <label for="name">{{ t "register.name" }}</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="Anonymous" minlength="3" maxlength="30" required value="{{name}}">
+            <small class="form-text text-muted">
+                {{ t "register.name_info" }}
+            </small>
+        </div>
+        <div class="form-group">
+            <label for="email">{{ t "register.email" }}</label>
+            <input type="email" class="form-control" name="email" id="email" placeholder="info@example.com" required value="{{email}}">
+            <small class="form-text text-muted">
+                {{ t "register.email_info" }}
+            </small>
+        </div>
+        <div class="form-group">
+            <label for="password">{{ t "register.password" }}</label>
+            <input type="password" class="form-control" name="password" id="password" placeholder="correct horse battery staple" minlength="6" required>
+            <small class="form-text text-muted">
+                {{ t "register.password_info" }}
+            </small>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">
+            {{ t "register.submit_button" }}
+        </button>
+    </form>
+    {{/if}}
+</div>
+{{/inline}}
+{{/layout}}

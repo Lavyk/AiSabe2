@@ -1,0 +1,64 @@
+version: "3"
+services:
+    # caddy:
+    #     image: caddy:2.8.1-alpine
+    #     restart: unless-stopped
+    #     ports:
+    #     - "80:80"
+    #     - "443:443"
+    #     - "443:443/udp"
+    #     volumes:
+    #     - $PWD/Caddyfile:/etc/caddy/Caddyfile
+    #     - caddy_data:/data
+    #     - caddy_config:/config
+    #     networks:
+    #     - proxy
+    web:
+        build: .
+        restart: unless-stopped
+        environment:
+        - PGHOST=db
+        - PGPORT=5432
+        - PGDATABASE=cup2024
+        - PGUSER=cup2024
+        - PGPASSWORD=123456
+        env_file:
+        - prod.env        
+        networks:
+        - db
+        ports:
+        - "80:8080"
+        # - proxy
+    db:
+        image: postgres:16.3
+        restart: unless-stopped
+        environment:
+        - POSTGRES_USER=cup2024
+        - POSTGRES_DB=cup2024
+        - POSTGRES_PASSWORD=123456
+        networks:
+        - db
+        volumes:
+        - postgres_data:/var/lib/postgresql/data
+    autoupdater:
+        build: ./autoupdater
+        restart: unless-stopped
+        # networks:
+        # - proxy
+    backup-daemon:
+        build: ./backup-daemon
+        restart: unless-stopped
+        networks:
+        - db
+        volumes:
+        - backups:/backups
+
+networks:
+    # proxy:
+    db:
+
+volumes:
+    # caddy_data:
+    # caddy_config:
+    postgres_data:
+    backups:

@@ -1,0 +1,126 @@
+{{#> layout}}
+{{#*inline "head"}}
+<title>{{ t "mybets.title" }} - {{@websiteName}}</title>
+<style>
+.not-betted {
+    background-color: #e6ff99;
+}
+@keyframes pulse-success {
+    0%, 100% { background-color: white; }
+    30% { background-color: #76FF7A; }
+}
+.autosave-success {
+    animation: pulse-success 1s;
+}
+@keyframes pulse-error {
+    0%, 100% { background-color: white; }
+    30% { background-color: #DC381F; }
+}
+.autosave-error {
+    animation: pulse-error 1s;
+}
+</style>
+{{/inline}}
+{{#*inline "body"}}
+{{> navbar}}
+<input type="hidden" name="_csrf" value="{{csrfToken}}">
+<input type="hidden" name="_action" value="/save_bet">
+<div class="container">
+
+<h2>{{ t "mybets.header" }}</h2>
+
+{{#each extraBets}}
+<div class="card mb-3">
+    <div class="card-header">
+        {{ name }}
+        <div class="small text-muted">
+            {{ @tr "mybets.extra_bet_info" count=numberOfTeams scoreFactor=scoreFactor }}
+        </div>
+    </div>
+    <div class="card-body">
+        {{#each selectedTeams}}
+        <div>
+            {{ name }}
+        </div>
+        {{else}}
+        <div class="text-muted small">
+            {{ @t "mybets.no_team_selected" }}
+        </div>
+        {{/each}}
+        {{#if isEditable}}
+        <a href="/extra_bet/{{id}}" class="btn btn-outline-info mt-3">
+            {{ @t "mybets.edit_bet_button" }}
+        </a>
+        <div class="small text-muted text-right">
+            {{ @tr "mybets.edit_bet_until" date=(calendar editableUntil) }}
+        </div>
+        {{else}}
+        <div class="text-muted small text-right">
+            {{ @t "mybets.edit_disabled" }}
+        </div>
+        {{/if}}
+    </div>
+</div>
+{{/each}}
+
+{{#if (gt upcomingMatchesWithoutBet 0)}}
+<div class="alert alert-warning">
+    <strong>
+        {{ t "mybets.no_bets_info" }}
+    </strong>
+</div>
+{{/if}}
+
+{{#each matchesPerDayList}}
+    <div class="form-row mb-3 mt-4 pt-3 border-top">
+        <div className="col">
+            {{formatDate date}}
+        </div>
+    </div>
+    {{#each matches}}
+    <div class="form-row autosave mb-1 pb-1 align-items-center">
+        <div class="col-md-2 col-6 order-md-1 order-1 small">
+            <span class="d-none d-lg-inline">{{formatTime starts_at}}</span>
+            <span class="d-lg-none">{{formatTime starts_at}}</span>
+        </div>
+        <div class="col-md-3 col-6 order-md-1 order-2 text-right">
+            {{#if home_team_name}}
+                <strong>{{home_team_name}}</strong>
+            {{else}}
+                <strong>{{placeholder_home}}</strong>
+            {{/if}}
+        </div>
+        <div class="col-auto order-md-2 order-3 text-center m-auto m-md-0">
+            <input type="number" min="0" max="20" autocomplete="off"
+                {{#if (not has_teams)}}disabled{{/if}}
+                class="form-control text-center {{#if (contains @upcomingMatchesWithoutBetIds id) }}not-betted{{/if}}"
+                style="display:inline;width:80px;" name="home" value="{{bet_goals_home}}">
+            <input type="hidden" name="match" value="{{id}}">
+            :
+            <input type="number" min="0" max="20" autocomplete="off"
+                {{#if (not has_teams)}}disabled{{/if}}
+                class="form-control text-center {{#if (contains @upcomingMatchesWithoutBetIds id) }}not-betted{{/if}}"
+                style="display:inline;width:80px;" name="away" value="{{bet_goals_away}}">
+        </div>
+        <div class="col-md-3 col-6 order-md-3 order-2 text-left">
+            {{#if away_team_name}}
+                <strong>{{away_team_name}}</strong>
+            {{else}}
+                <strong>{{placeholder_away}}</strong>
+            {{/if}}
+        </div>
+        <div class="col-md order-md-4 col-6 order-1 small text-right">
+            <span class="d-none d-lg-inline">{{match_type_name}}</span>
+            <span class="d-lg-none">{{match_type_code}}</span>
+            {{> score_factor match_type_score_factor}}
+        </div>
+    </div>
+    {{/each}}
+{{/each}}
+
+</div>
+{{/inline}}
+{{#*inline "scripts"}}
+<script type="text/javascript" src="/static/js/save_bets.js"></script>
+{{/inline}}
+{{/layout}}
